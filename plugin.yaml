@@ -1,0 +1,53 @@
+name: mysql-execute-step
+rundeckPluginVersion: 1.2
+author: Alex Honor
+date: 04/04/2017
+version: 1.0.0
+providers:
+    - name: mysql-execute-inline-step
+      service: RemoteScriptNodeStep
+      title: mysql / execute / inline
+      description: Executes the SQL script.
+      plugin-type: script
+      script-interpreter: /usr/bin/env bash
+      script-file: exec-inline
+      script-args: ${config.database_username} ${config.database_name} ${config.database_host}
+      config:
+        - name: sql_script
+          title: SQL
+          type: String
+          required: true
+          description: the sql script to execute
+          renderingOptions:
+            displayType: CODE
+            codeSyntaxMode: sql
+        - name: dryrun
+          title: Dryrun?
+          type: Boolean
+          description: Do not execute but print what would be run.
+        - name: database_host
+          title: Database host
+          type: String
+          required: true
+          description: the database hostname          
+        - name: database_name
+          title: Database name
+          type: String
+          required: true
+          description: the database name
+        - name: database_username
+          title: Username
+          type: String
+          required: true
+          description: the database username
+        - name: database_password
+          title: Password
+          type: String
+          required: true
+          description: "Storage path for database password. Can reference the database-password-storage-path node attribute."
+          scope: Instance
+          renderingOptions:
+            selectionAccessor: "STORAGE_PATH"
+            valueConversion: "STORAGE_PATH_AUTOMATIC_READ"
+            storage-path-root: "keys"
+            instance-scope-node-attribute: "mysql-password-storage-path"

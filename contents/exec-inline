@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -eu
+
+declare -r DB_USER=$1 DB_NAME=$2 DB_HOST=$3
+
+if [[ "${RD_CONFIG_DRYRUN:-}" == true ]]
+then
+	cat <<-EOF
+	[dry-run] mysql -h $DB_HOST -u $DB_USER -p${RD_CONFIG_DATABASE_PASSWORD//[a-z0-9]/#} $DB_NAME
+	$RD_CONFIG_SQL_SCRIPT
+	[dry-run]
+	EOF
+else
+	mysql -h "$DB_HOST}" -u "$DB_USER" -p"$RD_CONFIG_DATABASE_PASSWORD" "$DB_NAME" <<-SQL
+	$RD_CONFIG_SQL_SCRIPT
+	SQL
+
+fi	
+
+exit $?
